@@ -1,0 +1,31 @@
+// Backend (Servidor): Recibe tareas y responde con un mensaje
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./db'); // Base de datos simulada
+
+const app = express();
+app.use(bodyParser.json());
+
+app.post('/add-task', (req, res) => {
+    const { task } = req.body;
+
+    // Validación de la tarea
+    if (!task || task.trim() === '') {
+        return res.status(400).json({ message: "La tarea no puede estar vacía" });
+    }
+
+    // Guardar tarea en la base de datos simulada
+    db.push(task);
+
+    res.status(200).json({ message: `Tarea guardada: ${task}` });
+});
+
+const PORT = 4000;
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});
+
+// Escalabilidad: Se pueden agregar más rutas y lógica para gestión de tareas.
+// Mantenibilidad: Utilizar Express permite mantener el código modular y entendible.
+// Seguridad: Se utiliza validación para evitar que se guarden tareas vacías.

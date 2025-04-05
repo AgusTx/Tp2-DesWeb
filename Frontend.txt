@@ -1,0 +1,47 @@
+// Frontend (Cliente): Componente para agregar tareas
+
+import React, { useState } from 'react';
+
+const TaskForm = () => {
+    const [taskName, setTaskName] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validación básica
+        if (!taskName.trim()) {
+            alert("La tarea no puede estar vacía");
+            return;
+        }
+
+        const response = await fetch('http://localhost:4000/add-task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ task: taskName }),
+        });
+
+        const result = await response.json();
+        alert(result.message);
+        setTaskName('');
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input 
+                type="text" 
+                value={taskName} 
+                onChange={(e) => setTaskName(e.target.value)} 
+                placeholder="Ingresa una tarea" 
+            />
+            <button type="submit">Agregar</button>
+        </form>
+    );
+};
+
+export default TaskForm;
+
+// Escalabilidad: Se pueden agregar más funcionalidades como la gestión de tareas y usuarios.
+// Mantenibilidad: El uso de hooks (useState) permite mantener el código limpio y modular.
+// Seguridad: La validación previa al envío evita inyecciones de datos.
